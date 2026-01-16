@@ -1,11 +1,49 @@
-## Overview
+# 策略蒸馏模块 (On-Policy Distillation)
 
-This repository is built on top of the open-source [**verl**](https://github.com/volcengine/verl) (HybridFlow RLHF/RL training framework) and adds support for **on-policy distillation**.
-It is designed for scenarios where the **teacher and student use different vocabularies**, e.g., distilling from `Qwen3` (teacher) to a recommendation-pretrained model (student) that contains **extended itemic tokens**, while improving and preserving general-purpose capabilities.
+基于verl框架的在线策略蒸馏实现，用于解决教师模型和学生模型词汇表不匹配的问题。特别适用于从通用LLM（如Qwen3）向包含扩展itemic tokens的推荐专用模型进行知识迁移，同时保持通用能力。
 
-> **Note**: This repository is forked from [verl](https://github.com/volcengine/verl) at commit [`703a078`](https://github.com/volcengine/verl/commit/703a07856fe2544833dfce51136f386654574b30) and extended with on-policy distillation capabilities.
+## 🎯 核心特性
 
-The high-level idea is briefly described in the OpenOneRec technical report, Section **5.2 On-policy Distillation for General Capability**: [OneRecBench.pdf](OneRecBench.pdf).
+### 异构词汇表蒸馏
+- **教师-学生不对称**: 支持不同词汇表的模型间蒸馏
+- **扩展token处理**: 智能处理itemic tokens等扩展词汇
+- **能力保持**: 在提升推荐能力的同时保持通用推理性能
+
+### 技术创新
+- **在线蒸馏**: 策略级别的知识迁移，而非简单的数据复制
+- **反向KL散度**: 使用reverse KL作为蒸馏信号
+- **优势裁剪**: 避免训练不稳定的数值问题
+
+## 📖 技术原理
+
+### 蒸馏信号计算
+$$A = -(\log p_{\text{student}} - \log p_{\text{teacher}})$$
+
+### 优势裁剪
+- **上限**: `DISTILL_ADV_MAX=5.0`
+- **下限**: `DISTILL_ADV_MIN=-30.0`
+
+## 🏗️ 架构设计
+
+### 核心组件
+
+#### `recipe/onpolicy_distill/` - 蒸馏训练配方
+- **main_onpolicy_distill.py**: 蒸馏训练主入口
+- **onpolicy_distill_trainer.py**: 蒸馏训练器实现
+
+#### `verl/utils/dataset/` - 数据适配器
+- **onerec_dataset.py**: OneRec数据格式适配器
+
+#### 扩展功能
+- **词汇表不匹配处理**: 自动检测和处理扩展token
+- **推理模式支持**: 可选的thinking模式开关
+- **性能监控**: 集成W&B和控制台日志
+
+## 🔄 版本信息
+
+基于verl commit: [`703a078`](https://github.com/volcengine/verl/commit/703a07856fe2544833dfce51136f386654574b30)
+
+扩展实现参考技术报告第5.2节：在线策略蒸馏以保持通用能力。
 
 ## Key Features
 

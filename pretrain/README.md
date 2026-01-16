@@ -1,16 +1,45 @@
-# OpenOneRec Pretraining Module
+# 预训练模块 (Pretraining Module)
 
-The OpenOneRec pretraining module is based on the Qwen3 architecture, supporting a two-stage pretraining pipeline (Itemic-Text Alignment → Full-parameter Co-Pretraining) and SFT training workflow.
+基于Qwen3架构的OpenOneRec预训练模块，实现从基础语言模型到专业推荐模型的完整训练流程。采用创新的"Items as Tokens"范式，将推荐项目编码为离散token，实现模态统一。
 
-> **⚠️ Important Notice**
->
-> The distributed training in this module **relies on MPI (Message Passing Interface)** for multi-node communication. The current training scripts use `mpirun` to launch distributed training, requiring proper MPI environment configuration (e.g., OpenMPI) and hostfile setup.
->
-> To simplify environment configuration and improve reproducibility, we plan to release in future versions:
-> - **Pre-configured Docker/Apptainer images**: Including all necessary dependencies and MPI environment
-> - **torchrun-based training scripts**: Providing an easier way to launch distributed training
->
-> Before the images and torchrun versions are released, please ensure your environment has MPI properly installed and configured.
+## 🏆 核心创新
+
+### Itemic Tokens机制
+- **分层向量量化**: 使用残差K-means对项目embedding进行分层编码
+- **词汇表扩展**: 在Qwen3基础上增加专用项目token
+- **模态对齐**: 打通文本和推荐项目的语义空间
+
+### 两阶段训练策略
+1. **Stage 1**: Itemic-Text Alignment - 专注学习项目嵌入
+2. **Stage 2**: Full-parameter Co-Pretraining - 联合优化所有参数
+
+## 🏗️ 架构设计
+
+### 核心组件
+
+#### `onerec_llm/` - OneRec LLM核心实现
+- **models/qwen3/**: 基于Qwen3的模型实现，支持词汇表扩展
+- **data/**: 高效的数据加载器，支持Parquet格式和分布式采样
+- **training/**: 分布式训练基础设施，包含梯度累积、激活检查点等
+- **losses/**: 训练损失函数实现
+- **utils/**: 工具函数和辅助模块
+
+#### `recipes/` - 训练配方
+- **train_qwen3.py**: 统一的训练入口，支持预训练和SFT
+
+#### `tools/` - 模型工具
+- **model_converter/**: 模型格式转换（训练checkpoint ↔ HuggingFace）
+- **model_test/**: 模型测试和验证工具
+
+## ⚠️ 重要提醒
+
+**分布式训练依赖MPI**: 当前版本使用`mpirun`进行多节点通信，需要正确配置MPI环境。
+
+### 未来规划
+- 🐳 **预配置容器镜像**: 包含所有依赖和MPI环境
+- 🚀 **torchrun训练脚本**: 更简单的分布式训练启动方式
+
+在使用前，请确保MPI环境正确安装和配置。
 
 
 ## Quick Start

@@ -1,11 +1,17 @@
-# Residual K-Means Tokenizer
+# 残差K-means分词器 (Residual K-Means Tokenizer)
 
-A residual K-means model for vector quantization. It encodes continuous embeddings into discrete codes through hierarchical clustering.
+用于将连续的项目嵌入向量编码为离散token的残差K-means模型。通过分层聚类实现高效的向量量化，将推荐项目转换为LLM可处理的离散表示。
 
-> Public weights are available at [OpenOneRec/OneRec-tokenizer](https://huggingface.co/OpenOneRec/OneRec-tokenizer).
+## 🎯 核心功能
 
+- **分层向量量化**: 多层残差K-means编码
+- **项目嵌入编码**: 将项目向量转换为离散token序列
+- **模态桥梁**: 连接推荐系统和语言模型的语义空间
 
-> To utilize our foundation model, when using new datasets, the **embedding model** must be [Qwen3-8B-Embedding](https://huggingface.co/Qwen/Qwen3-Embedding-8B).
+## 📚 公开资源
+
+- **模型权重**: [OpenOneRec/OneRec-tokenizer](https://huggingface.co/OpenOneRec/OneRec-tokenizer)
+- **嵌入模型**: 必须使用[Qwen3-8B-Embedding](https://huggingface.co/Qwen/Qwen3-Embedding-8B)进行新数据集处理
 
 ## Files
 

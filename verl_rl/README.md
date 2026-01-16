@@ -1,6 +1,20 @@
-# OneRec RL Training
+# 强化学习训练模块 (RL Training Module)
 
-Reinforcement learning training for OneRec recommendation model based on verl framework.
+基于verl框架的OneRec推荐模型强化学习训练模块。采用GRPO (Generalized Reward-based Policy Optimization) 算法，对模型进行推荐能力的后训练优化。
+
+## 🎯 核心功能
+
+### GRPO算法实现
+- **奖励驱动优化**: 基于推荐任务的奖励信号进行策略优化
+- **多任务学习**: 同时优化视频、广告、产品等推荐任务
+- **推理增强**: 支持thinking模式，提升复杂推理能力
+
+### 任务覆盖
+- **video_rec**: 短视频推荐
+- **ad_rec**: 广告推荐
+- **product_rec**: 产品推荐
+- **interactive_rec**: 交互式推荐
+- **label_cond_rec**: 标签条件推荐
 
 
 ## Installation

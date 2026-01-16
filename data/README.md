@@ -1,13 +1,30 @@
-# Dataset Documentation
+# 数据处理模块 (Data Processing Module)
 
-This directory contains data processing scripts and dataset format specifications for the OpenOneRec project.
+该模块是OpenOneRec项目的核心数据处理中心，负责将原始推荐数据转换为LLM可用的训练格式。模块采用统一的Parquet数据格式，支持从数据收集、清洗、转换到最终训练格式的全流程处理。
 
-## Table of Contents
+## 🎯 核心功能
 
-- [Quick Start](#quick-start) - Get started quickly with dataset download and processing
-- [Directory Structure](#directory-structure)
-- [Dataset Format Specification](#dataset-format-specification)
-- [Notes](#notes)
+- **多领域数据集成**: 短视频、广告、电商三大推荐场景
+- **格式标准化**: 统一的Parquet数据格式规范
+- **训练流程支持**: 预训练、SFT、蒸馏、RL的全流程数据准备
+- **数据质量保证**: 完整的数据验证和清洗机制
+
+## 🏗️ 架构设计
+
+### 数据流转链路
+```
+原始数据 → 数据清洗 → 格式转换 → 训练格式 → 模型训练
+    ↓         ↓         ↓         ↓         ↓
+ 快手内部    去重/过滤   Parquet    分片/采样   预训练/SFT
+```
+
+### 处理流程
+1. **数据收集**: 从快手内部获取多领域推荐数据
+2. **格式转换**: 将原始数据转换为标准Parquet格式
+3. **数据划分**: 按训练阶段进行数据切分和采样
+4. **质量检查**: 验证数据完整性和格式正确性
+
+## 📁 目录结构详解
 
 ## Directory Structure
 

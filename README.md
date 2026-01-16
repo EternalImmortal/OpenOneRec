@@ -118,6 +118,24 @@ On the **Amazon Benchmark** (10 datasets), OpenOneRec demonstrates exceptional z
 
 *Metric: Recall@10. Ours refers to OneRec-Foundation with text-augmented itemic tokens strategy.*
 
+## 📁 项目目录结构
+
+OpenOneRec项目采用了模块化的架构设计，每个目录都有明确的职责划分：
+
+### 🔧 核心模块
+- **[`pretrain/`](./pretrain/README.md)** - 预训练模块：基于Qwen3的两阶段预训练流程
+- **[`benchmarks/`](./benchmarks/README.md)** - 基准测试模块：RecIF-Bench评估框架
+- **[`data/`](./data/README.md)** - 数据处理模块：推荐数据转换和预处理
+- **[`tokenizer/`](./tokenizer/README.md)** - 分词器模块：残差K-means向量化分词器
+
+### 🎯 强化学习模块
+- **[`verl_distillation/`](./verl_distillation/README.md)** - 蒸馏训练：基于verl的策略蒸馏
+- **[`verl_rl/`](./verl_rl/README.md)** - 强化学习训练：基于verl的GRPO算法
+
+### 📊 资源与工具
+- **[`assets/`](./assets/)** - 项目资源：架构图、性能图表等
+- **[`scripts/`](./scripts/)** - 工具脚本：环境配置、数据处理等
+
 ## 🚀 Quick Start
 
 *Code release and detailed usage instructions are coming soon.*
