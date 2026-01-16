@@ -10,6 +10,7 @@ REC_DATA_PATH="../raw_data/onerec_data"
 OUTPUT_DIR="../output/split_data_pretrain"
 MAX_ROWS=1000
 ENGINE="pyarrow"
+TEST_CHUNK_NUM=10
 
 # Check if paths exist
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -25,10 +26,11 @@ if [ ! -e "${REC_DATA_PATH}" ]; then
 fi
 
 # Execute
-python3 "${SCRIPT_DIR}/scripts/split_data.py" \
+python3 "${SCRIPT_DIR}/scripts/split_data_v2.py" \
     --general_text_path "${GENERAL_TEXT_PATH}" \
     --rec_data_path "${REC_DATA_PATH}" \
     --output_dir "${OUTPUT_DIR}" \
     --max_rows "${MAX_ROWS}" \
-    --engine "${ENGINE}"
+    --engine "${ENGINE}" \
+    --test_chunk_num "${TEST_CHUNK_NUM}"
 
