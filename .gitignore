@@ -74,3 +74,5 @@ ckpt/
 
 # Ray
 ray_results/
+
+raw_data/
