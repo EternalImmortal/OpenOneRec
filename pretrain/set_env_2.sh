@@ -28,7 +28,7 @@ cat "${ENV_FILE}"
 # Install system dependencies
 PIP_CMD='pip'
 PROXY="http://oversea-squid1.jp.txyun:11080"
-HOSTFILE="/etc/mpi/hostfile"
+#HOSTFILE="/etc/mpi/hostfile"
 
 # Install numactl on all nodes
 mpirun --allow-run-as-root \
