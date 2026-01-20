@@ -71,6 +71,7 @@ MASTER_PORT=8499
 #    -x TOKENIZERS_PARALLELISM=false \
 #    with_nccl_local_env \
 bash -c "bash scripts/numa_runner.sh torchrun recipes/train_qwen3.py \
+    --nproc_per_node=4
     --model_dir $MODEL_DIR \
     --output_dir $OUTPUT_DIR \
     --dataset_config examples/dataset_config/pretrain.json \
