@@ -434,6 +434,23 @@ def initialize_distributed() -> Tuple[int, int, int]:
     
     return rank, world_size, local_rank
 
+def initialize_distributed_without_mpi() -> Tuple[int, int, int]:
+    """Initialize distributed training environment."""
+    # torchrun / torch.distributed.launch
+    rank = int(os.environ.get("RANK", 0))
+    world_size = int(os.environ.get("WORLD_SIZE", 1))
+    local_rank = int(os.environ.get("LOCAL_RANK", 0))
+
+    torch.cuda.set_device(local_rank)
+
+    torch.distributed.init_process_group(
+        backend="nccl",       # GPU 推荐 nccl
+        init_method="env://",  # 从环境变量读取 rank/world_size
+        timeout=PROCESS_GROUP_TIMEOUT
+    )
+
+    return rank, world_size, local_rank
+
 
 def initialize_model(
     args,
@@ -1009,7 +1026,8 @@ def train():
     assert args.save_checkpoint_per_step > 0, "save_checkpoint_per_step must be positive"
     
     # Initialize distributed training
-    rank, world_size, local_rank = initialize_distributed()
+    # rank, world_size, local_rank = initialize_distributed()
+    rank, world_size, local_rank = initialize_distributed_without_mpi()
     device_mesh = init_device_mesh("cuda", mesh_shape=(dist.get_world_size(),))
     
     set_random_seed(args.seed)
