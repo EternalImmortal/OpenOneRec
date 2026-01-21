@@ -1,5 +1,5 @@
 {
-    "name": "reproduce_pretrain_1",
+    "name": "chat_completion_parquet",
     "sources": "../output/split_data_pretrain/file_list.json",
     "only_assistant_loss": false,
     "max_length": 30000,
