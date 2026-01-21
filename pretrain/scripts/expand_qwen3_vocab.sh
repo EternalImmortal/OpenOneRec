@@ -14,3 +14,8 @@ python3 tools/model_converter/expand_qwen3_vocab.py \
     --vocab_size_per_layer $VOCAB_SIZE_PER_LAYER
 
 
+#python3 tools/model_converter/expand_qwen3_vocab.py \
+#    --hf_model_dir /data/text2music/hf_models/qwen3-1.7B \
+#    --output_model_dir /data/text2music/hf_models/qwen3-1.7B_itemic \
+#    --itemic_layer_n 3 \
+#    --vocab_size_per_layer 8192
