@@ -26,6 +26,9 @@ TCP_NIC=$(ifconfig | grep -B1 " "$(hostname -i)" " | grep -o "^\w*")
 MASTER_ADDR=$MY_NODE_IP
 MASTER_PORT=8499
 
+MAX_LENGTH=${1:-32768}
+MINIBATCH_SIZE=${2:-16384}
+
 #mpirun --allow-run-as-root \
 #    -hostfile $hostfile \
 #    -mca btl self,tcp -mca pml ob1 \
@@ -82,7 +85,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     --model_class Qwen3ForCausalLM \
     --monitor_datasource_loss \
     --monitor_datasource_cnt \
-    --max_length 32768 \
+    --max_length $MAX_LENGTH \
     --learning_rate 2e-4 \
     --min_lr 1e-4 \
     --weight_decay 0.1 \
@@ -90,7 +93,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     --num_warmup_steps 200 \
     --num_training_steps 2000 \
     --save_checkpoint_per_step 50 \
-    --minibatch_size 16384 \
+    --minibatch_size $MINIBATCH_SIZE \
     --logging_per_step 5 \
     --use_fp32_weight \
     --seed 19260817 \
