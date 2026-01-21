@@ -1,6 +1,6 @@
 sed 's/=1/=8/g' /etc/mpi/hostfile > /etc/mpi/hostfile_seq
 
-MODEL_DIR=/data/text2music/hf_models/qwen3-1.7B_itemic
+MODEL_DIR=/data/text2music/OneRec-8B-pro
 
 # OUTPUT_DIR can be customized via the first argument.
 # Usage:
