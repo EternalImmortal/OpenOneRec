@@ -482,14 +482,14 @@ class Qwen3ChatCompletionDataset(IterableDataset):
 
                 self.source_sample_cnt.setdefault(source_name, 0)
                 self.source_sample_cnt[source_name] += 1
-            
+
                 inputs = self._process(sample, source_name)
             except:
                 self.source_error_cnt.setdefault(source_name, 0)
                 self.source_error_cnt[source_name] += 1
                 error_ratio = self.source_error_cnt[source_name] * 1.0 / \
                     self.source_sample_cnt[source_name]
-                
+
                 rank, world_size, worker, num_workers = pytorch_worker_info()
                 logger.error(
                     f"Qwen3ChatCompletionDataset process sample error. worker=r{rank}_w{worker}"
