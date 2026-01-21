@@ -75,7 +75,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     recipes/train_qwen3.py \
     --model_dir $MODEL_DIR \
     --output_dir $OUTPUT_DIR \
-    --dataset_config examples/dataset_config/pretrain.json \
+    --dataset_config reproduce/dataset_config/pretrain.json \
     --freeze_llm \
     --use_tie_weights \
     --start_optimize_embedding_index 151669 \
