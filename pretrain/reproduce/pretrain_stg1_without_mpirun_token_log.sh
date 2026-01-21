@@ -111,4 +111,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     --enable_profiler \
     --enable_gradient_checkpointing \
     --use_chunked_loss_computer \
+    --log_batch_avg_tokens \
+    --batch_token_metric valid_tokens \
+    --batch_token_log_every 10 \
 " > $OUTPUT_DIR/stdout.log 2>$OUTPUT_DIR/stderr.log &

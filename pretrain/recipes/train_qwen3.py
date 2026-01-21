@@ -206,6 +206,101 @@ class TensorBoardLogger:
             ))
 
 
+def _get_batch_avg_tokens(
+    batch: Dict,
+    metric: str = "valid_tokens",
+) -> Tuple[int, int]:
+    """Return (token_sum, sample_count) for a batch.
+
+    Notes:
+      - "valid_tokens": counts tokens where loss_mask==1 (most representative for training loss).
+      - "packed_tokens": counts tokens per sample based on cu_seqlens segment lengths (excluding the final padding segment).
+      - "total_tokens": counts total tokens in input_ids (includes padding).
+    """
+    input_ids = batch.get("input_ids", None)
+    loss_mask = batch.get("loss_mask", None)
+    cu_seqlens = batch.get("cu_seqlens", None)
+
+    if cu_seqlens is not None:
+        # cu_seqlens includes a final segment for padding; ignore it.
+        # num_samples is the number of real packed samples.
+        num_samples = max(int(cu_seqlens.numel()) - 2, 0)
+    else:
+        num_samples = 1
+
+    if metric == "valid_tokens":
+        if loss_mask is None:
+            # Fallback if loss_mask missing
+            token_sum = int(input_ids.numel()) if input_ids is not None else 0
+        else:
+            token_sum = int((loss_mask == 1).sum().item())
+        return token_sum, max(num_samples, 1)
+
+    if metric == "packed_tokens":
+        if cu_seqlens is None:
+            token_sum = int(input_ids.numel()) if input_ids is not None else 0
+            return token_sum, 1
+        diffs = (cu_seqlens[1:] - cu_seqlens[:-1]).to(torch.int64)
+        if diffs.numel() >= 1:
+            diffs = diffs[:-1]
+        token_sum = int(diffs.sum().item())
+        return token_sum, max(int(diffs.numel()), 1)
+
+    if metric == "total_tokens":
+        token_sum = int(input_ids.numel()) if input_ids is not None else 0
+        return token_sum, max(num_samples, 1)
+
+    raise ValueError(f"Unknown batch_token_metric: {metric}")
+
+
+def log_batch_avg_tokens(
+    global_step: int,
+    batch: Dict,
+    args,
+    tb_writer: Optional[SummaryWriter],
+):
+    """Log average tokens per sample for the current batch."""
+    if not getattr(args, "log_batch_avg_tokens", False):
+        return
+
+    every = int(getattr(args, "batch_token_log_every", 0) or 0)
+    if every <= 0:
+        every = int(getattr(args, "logging_per_step", 100))
+
+    if global_step % every != 0:
+        return
+
+    metric = getattr(args, "batch_token_metric", "valid_tokens")
+
+    token_sum, sample_cnt = _get_batch_avg_tokens(batch, metric=metric)
+    device = None
+    if batch.get("input_ids", None) is not None and torch.is_tensor(batch["input_ids"]):
+        device = batch["input_ids"].device
+
+    token_sample = torch.tensor([token_sum, sample_cnt], dtype=torch.float32, device=device)
+
+    # Global average across ranks (sum then divide) if distributed is initialized.
+    if dist.is_available() and dist.is_initialized():
+        dist.all_reduce(token_sample, op=dist.ReduceOp.SUM)
+
+    global_token_sum, global_sample_cnt = token_sample.tolist()
+    avg_tokens = global_token_sum / max(global_sample_cnt, 1.0)
+
+    if dist.get_rank() == 0:
+        print_rank_0(
+            f"[batch_tokens] step={global_step} metric={metric} avg_tokens={avg_tokens:.2f} "
+            f"(tokens={int(global_token_sum)}, samples={int(global_sample_cnt)})"
+        )
+
+        if tb_writer is not None:
+            tb_writer.add_scalar(
+                f"batch/avg_tokens_{metric}",
+                avg_tokens,
+                global_step=global_step,
+                new_style=True,
+            )
+
+
 def get_argument_parser() -> argparse.ArgumentParser:
     """Create and configure argument parser."""
     parser = argparse.ArgumentParser(description="Qwen3 Training Script")
@@ -274,7 +369,7 @@ def get_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--allow_random_init_params", type=str, default='',
                        help="Allow random initialization for specified parameters")
     parser.add_argument("--logging_per_step", type=int, default=100,
-                       help="Number of steps to log training info")
+                       help="Number of steps between logging")
     parser.add_argument("--seed", type=int, default=123,
                        help="Random seed")
     parser.add_argument("--monitor_datasource_loss", action="store_true",
@@ -283,7 +378,14 @@ def get_argument_parser() -> argparse.ArgumentParser:
                        help="Monitor count of each datasource")
     parser.add_argument("--use_chunked_loss_computer", action="store_true",
                        help="Use chunked loss computer")
-    
+    parser.add_argument("--log_batch_avg_tokens", action="store_true",
+                       help="Whether to log average tokens per sample for each batch")
+    parser.add_argument("--batch_token_metric", type=str, default="valid_tokens",
+                       choices=["valid_tokens", "packed_tokens", "total_tokens"],
+                       help="Which token metric to use for batch avg token logging")
+    parser.add_argument("--batch_token_log_every", type=int, default=0,
+                       help="Log batch avg tokens every N steps (0 means use logging_per_step)")
+
     # Profiling arguments
     parser.add_argument("--enable_profiler", action="store_true",
                        help="Enable PyTorch profiler for performance analysis")
@@ -1254,6 +1356,9 @@ def train():
                 )
                 metrics.reset_period_accumulators()
             
+            # Log batch average tokens
+            log_batch_avg_tokens(global_step, batch, args, tb_writer)
+
             # Save checkpoint
             # Save at regular intervals (save_checkpoint_per_step) and at early steps (20, 200)
             # Early checkpoints help verify training setup and catch issues early
