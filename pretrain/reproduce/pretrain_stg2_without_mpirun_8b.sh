@@ -89,7 +89,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     recipes/train_qwen3.py \
     --model_dir $MODEL_DIR \
     --output_dir $OUTPUT_DIR \
-    --dataset_config reproduce/dataset_config/pretrain.json \
+    --dataset_config reproduce/dataset_config/pretrain_8B.json \
     --use_tie_weights \
     --model_class Qwen3ForCausalLM \
     --monitor_datasource_loss \
