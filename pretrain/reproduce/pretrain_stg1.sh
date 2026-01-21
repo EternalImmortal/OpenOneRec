@@ -1,6 +1,6 @@
 sed 's/=1/=8/g' /etc/mpi/hostfile > /etc/mpi/hostfile_seq
 
-MODEL_DIR=/root/.cache/huggingface/hub/models--OpenOneRec--OneRec-1.7B/snapshots/cc4d0b5b7294ecf75e40be1c77fa6b7d284bb84b
+MODEL_DIR=/data/text2music/hf_models/qwen3-1.7B_itemic
 OUTPUT_DIR=/data/text2music/OpenOneRec/output/reproduce_pretrain_stg1_1
 mkdir -p $OUTPUT_DIR
 mkdir -p /tmp/_wids_cache
