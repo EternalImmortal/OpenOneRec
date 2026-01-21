@@ -1,7 +1,17 @@
 sed 's/=1/=8/g' /etc/mpi/hostfile > /etc/mpi/hostfile_seq
 
 MODEL_DIR=/data/text2music/hf_models/qwen3-1.7B_itemic
-OUTPUT_DIR=/data/text2music/OpenOneRec/output/reproduce_pretrain_stg1_1
+
+# OUTPUT_DIR can be customized via the first argument.
+# Usage:
+#   bash pretrain_stg1_without_mpirun.sh [RUN_NAME] [MAX_LENGTH] [MINIBATCH_SIZE]
+# Examples:
+#   bash pretrain_stg1_without_mpirun.sh exp_01
+#   bash pretrain_stg1_without_mpirun.sh exp_02 16384 4096
+RUN_NAME=${1:-reproduce_pretrain_stg1_1}
+OUTPUT_BASE_DIR=/data/text2music/OpenOneRec/output
+OUTPUT_DIR=${OUTPUT_BASE_DIR}/${RUN_NAME}
+
 mkdir -p $OUTPUT_DIR
 mkdir -p /tmp/_wids_cache
 
@@ -26,8 +36,9 @@ TCP_NIC=$(ifconfig | grep -B1 " "$(hostname -i)" " | grep -o "^\w*")
 MASTER_ADDR=$MY_NODE_IP
 MASTER_PORT=8499
 
-MAX_LENGTH=${1:-32768}
-MINIBATCH_SIZE=${2:-16384}
+# Shifted by 1 because $1 is RUN_NAME now
+MAX_LENGTH=${2:-32768}
+MINIBATCH_SIZE=${3:-16384}
 
 #mpirun --allow-run-as-root \
 #    -hostfile $hostfile \
