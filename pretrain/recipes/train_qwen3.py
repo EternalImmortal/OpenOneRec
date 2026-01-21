@@ -471,7 +471,9 @@ def initialize_model(
     """
     # Create model on meta device
     with set_default_dtype(torch.bfloat16), torch.device("meta"), init_empty_weights():
-        config = AutoConfig.from_pretrained(args.model_dir, trust_remote_code=True)
+        config = AutoConfig.from_pretrained(args.model_dir, trust_remote_code=True,
+                                            local_files_only=True  # 只从本地目录加载
+                                            )
         config._attn_implementation = "flash_attention_2"
         config.use_cache = False
         config.chunked_loss_computer = args.use_chunked_loss_computer
@@ -1115,7 +1117,9 @@ def train():
     dist.barrier()
     
     # Load tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(args.model_dir, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_dir, trust_remote_code=True,
+                                              local_files_only=True  # 只从本地目录加载
+                                              )
     
     # Save dataset configuration
     if dist.get_rank() == 0:
