@@ -90,9 +90,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     --model_dir $MODEL_DIR \
     --output_dir $OUTPUT_DIR \
     --dataset_config reproduce/dataset_config/pretrain.json \
-    --freeze_llm \
     --use_tie_weights \
-    --start_optimize_embedding_index 151669 \
     --model_class Qwen3ForCausalLM \
     --monitor_datasource_loss \
     --monitor_datasource_cnt \
@@ -106,6 +104,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     --save_checkpoint_per_step 50 \
     --minibatch_size $MINIBATCH_SIZE \
     --logging_per_step 5 \
+    --use_fp32_weight \
     --use_fp32_weight \
     --seed 19260817 \
     --enable_profiler \
