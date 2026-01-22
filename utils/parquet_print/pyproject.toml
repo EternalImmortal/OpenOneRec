@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parquet-print"
+version = "0.1.0"
+description = "Small CLI utility to preview parquet files"
+requires-python = ">=3.9"
+dependencies = [
+  "pyarrow>=10",
+  "pandas>=1.5",
+]
+
+[project.scripts]
+pp = "parquet_print.cli:main"
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.packages.find]
+where = [".."]
+include = ["parquet_print"]

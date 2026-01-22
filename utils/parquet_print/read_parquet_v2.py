@@ -8,6 +8,7 @@ def main():
     parser = argparse.ArgumentParser(description="高效读取大 Parquet 文件的前 n 行")
     parser.add_argument("file_path", help="Parquet 文件路径")
     parser.add_argument("-n", "--num_rows", type=int, default=3, help="打印行数 (默认: 3)")
+    parser.add_argument("--header_only", action="store_true", help="仅打印文件头信息，不读取数据内容")
 
     args = parser.parse_args()
 
@@ -18,6 +19,15 @@ def main():
     try:
         # 1. 使用 ParquetFile 加载元数据（不读取实际数据内容）
         parquet_file = pq.ParquetFile(args.file_path)
+        if args.header_only:
+            print(f"--- 文件: {args.file_path} ---")
+            print(parquet_file.schema)
+            print(f"\n--- 统计信息 ---")
+            print(f"总记录数: {parquet_file.metadata.num_rows}")
+            print(f"数据列数: {parquet_file.metadata.num_columns}")
+            print(f"Row Groups数量: {parquet_file.metadata.num_row_groups}")
+            return
+
 
         # 2. 使用 iter_batches 迭代器
         # batch_size 设置为你需要的行数，它只会从磁盘读取必要的数据块
