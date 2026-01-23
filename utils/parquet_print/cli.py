@@ -88,7 +88,7 @@ def pretty_print_df_tabulate(df, max_rows=10, max_col_width=50):
     print(tabulate(df_print, headers='keys', tablefmt='psql', showindex=False))
 
 
-def pretty_print_df(df, max_rows=10, max_col_width=50, args):
+def pretty_print_df(df, args, max_rows=10, max_col_width=50):
     if args.json:
         print_df_jsonl(df, max_rows=max_rows, max_col_width=max_col_width)
     else:
