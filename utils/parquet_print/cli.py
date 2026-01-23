@@ -12,6 +12,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("file_path", help="Parquet 文件路径")
     parser.add_argument("-n", "--num_rows", type=int, default=3, help="打印行数 (默认: 3)")
     parser.add_argument("--json", action="store_true", help="以 JSONL 格式打印输出")
+    parser.add_argument("--col_width", type=int, default=50, help="列宽限制 (默认: 50)")
     parser.add_argument(
         "--header_only",
         action="store_true",
@@ -141,7 +142,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         df = first_batch.to_pandas()
 
         print(f"--- 文件: {args.file_path} (前 {args.num_rows} 行) ---")
-        pretty_print_df(df, args, max_rows=args.num_rows)
+        pretty_print_df(df, args, max_rows=args.num_rows, max_col_width=args.col_width)
 
         print("\n--- 统计信息 ---")
         print(f"总记录数: {parquet_file.metadata.num_rows}")
