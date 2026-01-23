@@ -231,9 +231,19 @@ def main():
         logger.info("=" * 60)
         logger.info("Step 3: Loading general text data...")
         general_text_df = load_all_parquet_files(general_text_files, engine=args.engine)
+        # 打印通用数据的行数
+        logger.info(f"General text data rows: {len(general_text_df)}")
 
         logger.info("Step 4: Loading recommendation data...")
         rec_data_df = load_all_parquet_files(rec_data_files, engine=args.engine)
+        # 打印推荐数据的行数和占比
+        logger.info(f"Recommendation data rows: {len(rec_data_df)}")
+        if len(general_text_df) + len(rec_data_df) > 0:
+            rec_data_ratio = len(rec_data_df) / (len(general_text_df) + len(rec_data_df))
+            logger.info(f"Recommendation data ratio: {rec_data_ratio:.2%}")
+
+        # 2.5 控制推荐数据的比例
+        exit()
 
         # 3. Merge data
         logger.info("=" * 60)
