@@ -89,7 +89,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     recipes/train_qwen3.py \
     --model_dir $MODEL_DIR \
     --output_dir $OUTPUT_DIR \
-    --dataset_config reproduce/dataset_config/pretrain.json \
+    --dataset_config reproduce/dataset_config/pretrain_music_v1.json \
     --freeze_llm \
     --use_tie_weights \
     --start_optimize_embedding_index 151669 \
@@ -103,7 +103,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     --lr_scheduler_type cosine \
     --num_warmup_steps 200 \
     --num_training_steps 2000 \
-    --save_checkpoint_per_step 50 \
+    --save_checkpoint_per_step 100 \
     --minibatch_size $MINIBATCH_SIZE \
     --logging_per_step 5 \
     --use_fp32_weight \
