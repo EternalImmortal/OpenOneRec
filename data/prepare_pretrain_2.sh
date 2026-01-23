@@ -6,7 +6,7 @@ set -e
 # Configuration
 # Both general and onerec use datasets starting with pretrain
 GENERAL_TEXT_PATH="../raw_data/general_text/pretrain"
-REC_DATA_PATH="../raw_data/tme_data"
+REC_DATA_PATH="/data/text2music/OpenOneRec/music_output"
 OUTPUT_DIR="../output/music_pretrain_v1"
 MAX_ROWS=1000
 ENGINE="pyarrow"
