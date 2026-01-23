@@ -20,11 +20,11 @@ SID_FORMAT = '<|sid_begin|><s_a_{c0}><s_b_{c1}><s_c_{c2}><|sid_end|>'
 # Pretrain format templates
 PRETRAIN_TEMPLATES = [
     # Format 1: JSON format
-    lambda sid, caption: json.dumps({"视频ID": sid, "视频内容": caption}, ensure_ascii=False),
+    lambda sid, caption: json.dumps({"歌曲ID": sid, "歌曲内容": caption}, ensure_ascii=False),
     # Format 2: Display format
-    lambda sid, caption: f"视频{sid} 展示了以下内容：{caption}",
+    lambda sid, caption: f"歌曲{sid} 展示了以下内容：{caption}",
     # Format 3: Full description format
-    lambda sid, caption: f"视频{sid} 的内容完整描述如下：{caption}",
+    lambda sid, caption: f"歌曲{sid} 的内容完整描述如下：{caption}",
 ]
 
 
