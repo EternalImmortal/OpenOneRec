@@ -267,6 +267,13 @@ def main():
             combined_df = pd.concat([general_text_df, rec_data_df], ignore_index=True)
             logger.info(f"Merge complete: general text {len(general_text_df)} rows + recommendation data {len(rec_data_df)} rows = total {len(combined_df)} rows")
 
+        # 新增数据打散
+        combined_df = combined_df.sample(
+            frac=1.0,
+            random_state=42
+        ).reset_index(drop=True)
+        logger.info("Data shuffled after merging")
+
         # 4. Split data
         logger.info("=" * 60)
         logger.info("Step 6: Splitting data...")
