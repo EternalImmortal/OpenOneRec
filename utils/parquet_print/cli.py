@@ -141,7 +141,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         df = first_batch.to_pandas()
 
         print(f"--- 文件: {args.file_path} (前 {args.num_rows} 行) ---")
-        pretty_print_df(df, max_rows=args.num_rows)
+        pretty_print_df(df, args, max_rows=args.num_rows)
 
         print("\n--- 统计信息 ---")
         print(f"总记录数: {parquet_file.metadata.num_rows}")
