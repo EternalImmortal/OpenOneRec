@@ -1,6 +1,6 @@
 sed 's/=1/=8/g' /etc/mpi/hostfile > /etc/mpi/hostfile_seq
 
-MODEL_DIR=/data/text2music/hf_models/qwen3-1.7B_itemic
+MODEL_DIR=/data/text2music/hf_models/qwen3-1.7B_itemic_128^3
 
 # OUTPUT_DIR can be customized via the first argument.
 # Usage:
@@ -8,7 +8,7 @@ MODEL_DIR=/data/text2music/hf_models/qwen3-1.7B_itemic
 # Examples:
 #   bash pretrain_stg1_without_mpirun.sh exp_01
 #   bash pretrain_stg1_without_mpirun.sh exp_02 16384 4096
-RUN_NAME=${1:-reproduce_pretrain_stg1_1}
+RUN_NAME=${1:-reproduce_music_v1_pretrain_pretrain_stg1}
 OUTPUT_BASE_DIR=/data/text2music/OpenOneRec/output
 OUTPUT_DIR=${OUTPUT_BASE_DIR}/${RUN_NAME}
 
