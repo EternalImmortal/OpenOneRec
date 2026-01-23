@@ -18,23 +18,38 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def pretty_print_df(
-    df: pd.DataFrame,
-    max_rows: int,
-    max_col_width: int = 40,
-) -> None:
-    """
-    终端友好地打印 DataFrame：
-    - 限制列宽，防止长字符串撑爆终端
-    - 不打印 index，减少视觉噪音
-    """
-    with pd.option_context(
-        "display.max_rows", max_rows,
-        "display.max_columns", None,
-        "display.width", 200,
-        "display.max_colwidth", max_col_width,
-    ):
-        print(df.iloc[:max_rows].to_string(index=False))
+# pip install tabulate
+from tabulate import tabulate
+
+
+def pretty_print_df_tabulate(df, max_rows=10, max_col_width=40):
+    df_print = df.iloc[:max_rows].copy()
+
+    # 截断过长字符串 (Tabulate 不支持 max_colwidth 参数，需要手动截断)
+    for col in df_print.columns:
+        if df_print[col].dtype == object:
+            df_print[col] = df_print[col].astype(str).str.replace(r'[\r\n]+', ' ', regex=True)
+            df_print[col] = df_print[col].apply(lambda x: (x[:max_col_width] + '...') if len(x) > max_col_width else x)
+
+    print(tabulate(df_print, headers='keys', tablefmt='psql', showindex=False))
+
+# def pretty_print_df(
+#     df: pd.DataFrame,
+#     max_rows: int,
+#     max_col_width: int = 40,
+# ) -> None:
+#     """
+#     终端友好地打印 DataFrame：
+#     - 限制列宽，防止长字符串撑爆终端
+#     - 不打印 index，减少视觉噪音
+#     """
+#     with pd.option_context(
+#         "display.max_rows", max_rows,
+#         "display.max_columns", None,
+#         "display.width", 200,
+#         "display.max_colwidth", max_col_width,
+#     ):
+#         print(df.iloc[:max_rows].to_string(index=False))
 
 
 def main(argv: Optional[List[str]] = None) -> int:
