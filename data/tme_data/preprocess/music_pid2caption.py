@@ -15,7 +15,7 @@ if __name__ == "__main__":
     import uuid
 
     parser = argparse.ArgumentParser(description="Music PID to Caption Preprocessing")
-    parser.add_argument('--input_csv', type=str, required=True, help='Input CSV file path',
+    parser.add_argument('--input_csv', type=str, help='Input CSV file path',
                         default="/data/text2music/OpenOneRec/raw_data/tme_data/omini3rec_260123_12w.csv")
     parser.add_argument('--output_parquet', type=str, required=True, help='Output Parquet file path')
     args = parser.parse_args()
