@@ -22,7 +22,7 @@ def build_parser() -> argparse.ArgumentParser:
 from tabulate import tabulate
 
 
-def pretty_print_df(df, max_rows=10, max_col_width=100):
+def pretty_print_df(df, max_rows=10, max_col_width=50):
     df_print = df.iloc[:max_rows].copy()
 
     # 截断过长字符串 (Tabulate 不支持 max_colwidth 参数，需要手动截断)
