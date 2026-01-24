@@ -4,7 +4,6 @@ sed 's/=1/=8/g' /etc/mpi/hostfile > /etc/mpi/hostfile_seq
 
 STAGE1_OUTPUT_DIR=/data/text2music/OpenOneRec/output/reproduce_music_v1_pretrain_pretrain_stg1/
 MODEL_DIR=${STAGE1_OUTPUT_DIR}/step14000/global_step14000/converted
-OUTPUT_DIR=/code/onerec_pretrain/model_output/reproduce_music_v1_pretrain_pretrain_stg2
 
 # OUTPUT_DIR can be customized via the first argument.
 # Usage:
@@ -12,7 +11,7 @@ OUTPUT_DIR=/code/onerec_pretrain/model_output/reproduce_music_v1_pretrain_pretra
 # Examples:
 #   bash pretrain_stg1_without_mpirun.sh exp_01
 #   bash pretrain_stg1_without_mpirun.sh exp_02 16384 4096
-RUN_NAME=${1:-reproduce_music_v1_pretrain_pretrain_stg1}
+RUN_NAME=${1:-reproduce_music_v1_pretrain_pretrain_stg2}
 OUTPUT_BASE_DIR=/data/text2music/OpenOneRec/output
 OUTPUT_DIR=${OUTPUT_BASE_DIR}/${RUN_NAME}
 
