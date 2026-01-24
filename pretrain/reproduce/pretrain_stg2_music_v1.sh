@@ -102,7 +102,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     --weight_decay 0.1 \
     --lr_scheduler_type cosine \
     --num_warmup_steps 1000 \
-    --num_training_steps 1000 \
+    --num_training_steps 20000 \
     --save_checkpoint_per_step 1000 \
     --minibatch_size $MINIBATCH_SIZE \
     --logging_per_step 5 \
