@@ -1,6 +1,10 @@
 sed 's/=1/=8/g' /etc/mpi/hostfile > /etc/mpi/hostfile_seq
 
-MODEL_DIR=/data/text2music/hf_models/qwen3-1.7B_itemic_128^3
+#MODEL_DIR=/data/text2music/hf_models/qwen3-1.7B_itemic_128^3
+
+STAGE1_OUTPUT_DIR=/data/text2music/OpenOneRec/output/reproduce_music_v1_pretrain_pretrain_stg1/
+MODEL_DIR=${STAGE1_OUTPUT_DIR}/step14000/global_step14000/converted
+OUTPUT_DIR=/code/onerec_pretrain/model_output/reproduce_music_v1_pretrain_pretrain_stg2
 
 # OUTPUT_DIR can be customized via the first argument.
 # Usage:
@@ -80,7 +84,6 @@ MINIBATCH_SIZE=${3:-16384}
 #    -x HADOOP_USER_NAME=$HADOOP_USER_NAME \
 #    -x HADOOP_HOME=$HADOOP_HOME \
 #    -x SPARK_HOME=$SPARK_HOME \
-#    -x MASTER_ADDR=$MASTER_ADDR \
 #    -x MASTER_PORT=$MASTER_PORT \
 #    -x TOKENIZERS_PARALLELISM=false \
 #    with_nccl_local_env \
@@ -90,9 +93,7 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     --model_dir $MODEL_DIR \
     --output_dir $OUTPUT_DIR \
     --dataset_config reproduce/dataset_config/pretrain_music_v1.json \
-    --freeze_llm \
     --use_tie_weights \
-    --start_optimize_embedding_index 151669 \
     --model_class Qwen3ForCausalLM \
     --monitor_datasource_loss \
     --monitor_datasource_cnt \
@@ -101,9 +102,9 @@ bash -c "bash scripts/numa_runner.sh torchrun \
     --min_lr 1e-4 \
     --weight_decay 0.1 \
     --lr_scheduler_type cosine \
-    --num_warmup_steps 200 \
-    --num_training_steps 2000 \
-    --save_checkpoint_per_step 100 \
+    --num_warmup_steps 1000 \
+    --num_training_steps 1000 \
+    --save_checkpoint_per_step 1000 \
     --minibatch_size $MINIBATCH_SIZE \
     --logging_per_step 5 \
     --use_fp32_weight \
