@@ -4,6 +4,7 @@
 A unified tool for testing HuggingFace models with both direct text generation
 and chat template modes. Supports thinking mode and ground truth comparison.
 """
+# v2 支持将输出结果到处到csv
 
 import argparse
 import json
@@ -243,6 +244,25 @@ def load_test_cases_from_file(file_path: Union[str, Path]) -> tuple:
     return test_cases, ground_truths
 
 
+def load_test_cases_v2(file_path: Union[str, Path]) -> tuple:
+    with open(file_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    test_cases = []
+    ground_truths = []
+
+    for item in data:
+        test_cases.append({
+            "type": item.get("type", "text"),
+            "input": item["input"],
+            "sid": item.get("sid", ""),
+            "pid": item.get("pid", "")
+        })
+        ground_truths.append(item.get("ground_truth", ""))
+
+    return test_cases, ground_truths
+
+
 def get_default_test_cases() -> tuple:
     """Get default test cases for demonstration.
     
@@ -388,7 +408,7 @@ def main():
     # Load test cases
     if args.test_file:
         logger.info(f"Loading test cases from: {args.test_file}")
-        test_cases, ground_truths = load_test_cases_from_file(args.test_file)
+        test_cases, ground_truths = load_test_cases_v2(args.test_file)
     elif args.use_default:
         logger.info("Using default test cases")
         test_cases, ground_truths = get_default_test_cases()
@@ -397,7 +417,9 @@ def main():
         sys.exit(1)
     
     logger.info(f"Loaded {len(test_cases)} test cases\n")
-    
+
+    output_list = []
+
     # Run tests
     logger.info("Starting tests...\n")
     for i, (test_case, ground_truth) in enumerate(zip(test_cases, ground_truths), 1):
@@ -407,6 +429,8 @@ def main():
         
         test_type = test_case["type"]
         test_input = test_case["input"]
+        sid = test_case.get("sid", "")
+        pid = test_case.get("pid", "")
         
         # Display input
         if test_type == "text":
@@ -453,6 +477,15 @@ def main():
                     logger.info("✓ Match with ground truth")
                 else:
                     logger.info("✗ Does not match ground truth")
+
+            output_obj = {
+                "input": test_input,
+                "output": generated,
+                "ground_truth": ground_truth,
+                "sid": sid,
+                "pid": pid
+            }
+            output_list.append(output_obj)
             
         except Exception as e:
             logger.error(f"Generation failed: {e}", exc_info=True)
@@ -462,6 +495,13 @@ def main():
     logger.info("=" * 60)
     logger.info("All tests completed!")
     logger.info("=" * 60)
+
+    # dump outputs to a csv file
+    import pandas as pd
+    output_df = pd.DataFrame(output_list)
+    output_csv_path = Path("model_test_outputs.csv")
+    output_df.to_csv(output_csv_path, index=False)
+    logger.info(f"Outputs saved to: {output_csv_path}")
 
 
 if __name__ == "__main__":
