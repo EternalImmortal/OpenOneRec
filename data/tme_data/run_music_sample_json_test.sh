@@ -41,14 +41,14 @@ run_task() {
     shift 3
     local extra_args="$@"
 
-    local output_file="${OUTPUT_BASE_DIR}/${task_type}_${task_name}.parquet"
+    local output_file="${OUTPUT_BASE_DIR}/${task_type}_${task_name}.json"
     local temp_dir=$(mktemp -d)
 
     echo "  Output: ${output_file}"
     python3 "${script_path}" --output_dir "${temp_dir}" ${extra_args}
 
-    if [ -f "${temp_dir}/train.parquet" ]; then
-        mv "${temp_dir}/train.parquet" "${output_file}"
+    if [ -f "${temp_dir}/train.json" ]; then
+        mv "${temp_dir}/train.json" "${output_file}"
     fi
     rm -rf "${temp_dir}"
 }
