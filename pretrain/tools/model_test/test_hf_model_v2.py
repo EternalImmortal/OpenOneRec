@@ -429,6 +429,8 @@ def main():
         
         test_type = test_case["type"]
         test_input = test_case["input"]
+        logger.info("--- Input ---")
+        logger.info(f"input: {test_input}")
         sid = test_case.get("sid", "")
         pid = test_case.get("pid", "")
         

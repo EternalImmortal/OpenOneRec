@@ -40,7 +40,7 @@ USE_DEFAULT=true
 # Generation parameters
 MAX_NEW_TOKENS=4096
 TEMPERATURE=0.7
-TOP_P=0.95
+TOP_P=0.9
 REPETITION_PENALTY=1.2
 
 # Chat mode options
