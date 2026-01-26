@@ -38,7 +38,7 @@ USE_DEFAULT=true
  TEST_FILE=tools/model_test/test_pretrain_v2_1.json
 
 # Generation parameters
-MAX_NEW_TOKENS=1024
+MAX_NEW_TOKENS=4096
 TEMPERATURE=0.7
 TOP_P=0.9
 REPETITION_PENALTY=1.2
