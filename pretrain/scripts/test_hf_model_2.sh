@@ -34,8 +34,8 @@ fi
 USE_DEFAULT=true
 
 # Option 2: Use custom test file (comment out USE_DEFAULT and uncomment below)
-# USE_DEFAULT=false
-# TEST_FILE=tools/model_test/test_cases_example.json
+ USE_DEFAULT=false
+ TEST_FILE=tools/model_test/test_pretrain_v1.json
 
 # Generation parameters
 MAX_NEW_TOKENS=1024
