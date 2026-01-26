@@ -251,7 +251,7 @@ def load_test_cases_v2(file_path: Union[str, Path]) -> tuple:
     test_cases = []
     ground_truths = []
 
-    for item in data:
+    for item in data.get("test_cases", []):
         test_cases.append({
             "type": item.get("type", "text"),
             "input": item["input"],
