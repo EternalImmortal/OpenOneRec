@@ -35,10 +35,10 @@ USE_DEFAULT=true
 
 # Option 2: Use custom test file (comment out USE_DEFAULT and uncomment below)
  USE_DEFAULT=false
- TEST_FILE=tools/model_test/test_pretrain_v2.json
+ TEST_FILE=tools/model_test/test_pretrain_v2_1.json
 
 # Generation parameters
-MAX_NEW_TOKENS=4096
+MAX_NEW_TOKENS=1024
 TEMPERATURE=0.7
 TOP_P=0.9
 REPETITION_PENALTY=1.2
